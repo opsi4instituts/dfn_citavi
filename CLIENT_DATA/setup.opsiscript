@@ -1,0 +1,89 @@
+; Copyright (c) uib gmbh (www.uib.de)
+; This sourcecode is owned by uib
+; and published under the Terms of the General Public License.
+; credits: http://www.opsi.org/en/credits/
+
+[Actions]
+requiredWinstVersion >= "4.11.4.17"
+
+include_insert "insert_check_exit_code.opsiinc"
+include_insert "insert_get_licensekey.opsiinc"
+include_append "section_linkfolder.opsiinc"
+
+DefVar $MsiId$
+DefVar $UninstallProgram$
+DefVar $LogDir$
+DefVar $ProductId$  
+DefVar $MinimumSpace$
+DefVar $InstallDir$
+DefVar $PathToExe$
+DefVar $DesktopLinkName$
+DefVar $PrettyName$
+DefVar $PackageVersion$
+DefVar $Version$
+DefVar $msi_name$ 
+DefVar $Property_DesktopLink$
+DefVar $CustomPostInstall$
+DefVar $CustomPostDeinstall$
+
+Set $LogDir$ = "%SystemDrive%\tmp"
+Set $msi_name$ = "Citavi5Setup.msi"
+Set $PackageVersion$	= takeString(1, splitString ("%installingProdVersion%","-"))
+Set $Version$	= strPart("%installingProdVersion%", "1", calculate(strPos("%installingProdVersion%","-") + "-" + "1" ))
+Set $Property_DesktopLink$ = GetProductProperty("DesktopLink","True")
+; ----------------------------------------------------------------
+Set $ProductId$       = "citavi"
+Set $PrettyName$      = "Citavi"
+Set $MinimumSpace$    = "570 MB"
+Set $LicenseRequired$ = "false"
+Set $LicensePool$     = "p_" + $ProductId$
+Set $DesktopLinkName$ = "Citavi 5"
+Set $InstallDir$			= "%ProgramFiles32Dir%\Citavi 5"
+Set $PathToExe$       = $InstallDir$ + "\bin\Citavi.exe"
+; ----------------------------------------------------------------
+
+if not(HasMinimumSpace ("%SystemDrive%", $MinimumSpace$))
+	LogError "Not enough space on %SystemDrive%, " + $MinimumSpace$ + " on drive %SystemDrive% needed for " + $ProductId$
+	isFatalError "No Space"
+	; Stop process and set installation status to failed
+else
+  Killtask "Citavi.exe"
+	comment "Show product picture"
+	ShowBitmap "%ScriptPath%\" + $ProductId$ + ".png" $PrettyName$ + " " + $Version$
+	
+	if FileExists("%ScriptPath%\delsub.opsiscript")
+		comment "Start uninstall sub section"
+		Sub "%ScriptPath%\delsub.opsiscript"
+	endif
+	
+	Message "Installing " + $ProductId$ + " ..."
+	
+	if $LicenseRequired$ = "true"
+		comment "Licensing required, reserve license and get license key"
+		Sub_get_licensekey
+	endif
+	
+	comment "Start setup program"
+	ChangeDirectory "%SCRIPTPATH%"
+	
+	Winbatch_install
+	Sub_check_exitcode
+	
+	if $Property_DesktopLink$ = "True"
+    LinkFolder_create
+  else
+    LinkFolder_delete
+  endif
+
+  comment "include custom post install file"
+  set $CustomPostInstall$ = getProductProperty("custom-post-install","none")
+  if not ($CustomPostInstall$ = "none")
+	  if FileExists("%ScriptPath%\custom\" + $CustomPostInstall$)
+		  include_insert "%ScriptPath%\custom\" + $CustomPostInstall$
+	  endif
+  endif
+
+endif
+
+[Winbatch_install]
+msiexec /i "%ScriptPath%\$msi_name$" /q INSTALLDESKTOPSHORTCUTS=1 INSTALLSTARTMENUSHORTCUTS=1 /l* "$LogDir$\$ProductId$.install_log.txt" ALLUSERS=1 REBOOT=ReallySuppress 

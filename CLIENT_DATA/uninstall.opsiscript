@@ -1,0 +1,64 @@
+; Copyright (c) uib gmbh (www.uib.de)
+; This sourcecode is owned by uib gmbh
+; and published under the Terms of the General Public License.
+; credits: http://www.opsi.org/en/credits/
+
+[Actions]
+requiredWinstVersion >= "4.11.5.14"
+
+include_insert "insert_check_exit_code.opsiinc"
+include_append "section_linkfolder.opsiinc"
+
+DefVar $MsiId$
+DefVar $UninstallProgram$
+DefVar $LogDir$
+DefVar $ProductId$
+DefVar $InstallDir$
+DefVar $LicenseRequired$
+DefVar $LicensePool$
+DefVar $PrettyName$
+DefVar $DesktopLinkName$
+DefVar $CustomPostDeinstall$
+
+Set $LogDir$ = "%SystemDrive%\tmp"
+
+; ----------------------------------------------------------------
+; - Please edit the following values                             -
+; ----------------------------------------------------------------
+Set $ProductId$       = "citavi"
+Set $PrettyName$      = "Citavi"
+Set $LicenseRequired$ = "true"
+Set $LicensePool$     = "p_" + $ProductId$
+Set $DesktopLinkName$ = "Citavi 5"
+; ----------------------------------------------------------------
+
+Killtask "Citavi.exe"
+comment "Show product picture"
+ShowBitmap "%ScriptPath%\" + $ProductId$ + ".png" $PrettyName$ 
+
+Message "Uninstalling " + $PrettyName$ + "..."
+
+if FileExists("%ScriptPath%\delsub.opsiscript")
+	comment "Start uninstall sub section"
+	Sub "%ScriptPath%\delsub.opsiscript"
+endif
+
+if $LicenseRequired$ = "true"
+	comment "Licensing required, free license used"
+	Sub_free_license
+endif
+
+LinkFolder_delete
+
+[Sub_free_license]
+comment "License management is enabled and will be used"
+comment "Trying to free license used for the product"
+DefVar $result$
+Set $result$ = FreeLicense($LicensePool$)
+; If there is an assignment of a license pool to the product, it is possible to use
+; Set $result$ = FreeLicense("", $ProductId$)
+;
+; If there is an assignment of a license pool to a windows software id, it is possible to use
+; DefVar $WindowsSoftwareId$
+; $WindowsSoftwareId$ = "..."
+; set $result$ = FreeLicense("", "", $WindowsSoftwareId$)

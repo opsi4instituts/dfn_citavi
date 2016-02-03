@@ -1,0 +1,18 @@
+
+[LinkFolder_create]
+; create an shortcut to the installed exe on AllUsers desktop:
+set_basefolder common_desktopdirectory
+set_subfolder ""
+set_link
+       name: $DesktopLinkName$
+       target: $PathToExe$
+       parameters:
+       working_dir: $InstallDir$
+       icon_file:
+       icon_index:
+end_link
+
+[LinkFolder_delete]
+set_basefolder common_desktopdirectory
+set_subfolder ""
+delete_element $DesktopLinkName$

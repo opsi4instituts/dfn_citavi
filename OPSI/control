@@ -1,0 +1,60 @@
+[Package]
+version: 3
+depends: 
+incremental: False
+
+[Product]
+type: localboot
+id: dfn_citavi
+name: Citavi
+description: Literaturverwaltungsprogramm zum Recherchieren, PDF-Dokumente managen, Zitate sammeln, Wissen organisieren, Bibliographien automatisch erstellen, im Team arbeiten.
+advice: Dies installiert die Testversion, für die Lizensierung zur Vollversion bitte beim Institut/Anbieter nachfragen. This is a test version, to upgrade to a full license please ask your institution/provicer.
+version: 5.2
+priority: 0
+licenseRequired: False
+productClasses: 
+setupScript: setup.opsiscript
+uninstallScript: uninstall.opsiscript
+updateScript: 
+alwaysScript: 
+onceScript: 
+customScript: 
+userLoginScript: 
+
+[ProductDependency]
+action: setup
+requiredProduct: dfn_dotnet
+requiredStatus: installed
+requirementType: before
+
+[ProductProperty]
+type: bool
+name: desktoplink
+description: generate or delete DesktopLink
+default: True
+
+[ProductProperty]
+type: unicode
+name: custom-post-install
+multivalue: False
+editable: False
+description: Define filename for include script in custom directory after installation
+values: ["none", "post-install.opsiinc"]
+default: ["none"]
+
+[ProductProperty]
+type: unicode
+name: custom-post-deinstall
+multivalue: False
+editable: False
+description: Define filename for include script in custom directory after deinstallation
+values: ["none", "post-deinstall.opsiinc"]
+default: ["none"]
+
+[Changelog]
+citavi (3.3-1) testing; urgency=low
+
+  * Initial package
+
+ -- Eric Esser <esser@wzb.eu>  Wed, 07 Nov 2012 14:16:42 +0000
+
