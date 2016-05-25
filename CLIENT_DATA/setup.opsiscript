@@ -17,29 +17,36 @@ DefVar $ProductId$
 DefVar $MinimumSpace$
 DefVar $InstallDir$
 DefVar $PathToExe$
-DefVar $DesktopLinkName$
+DefVar $DesktopIconName$
 DefVar $PrettyName$
 DefVar $PackageVersion$
 DefVar $Version$
 DefVar $msi_name$ 
-DefVar $Property_DesktopLink$
+DefVar $Property_DesktopIcon$
 DefVar $CustomPostInstall$
 DefVar $CustomPostDeinstall$
+DefVar $LicenseType$
 
-Set $LogDir$ = "%SystemDrive%\tmp"
-Set $msi_name$ = "Citavi5Setup.msi"
-Set $PackageVersion$	= takeString(1, splitString ("%installingProdVersion%","-"))
-Set $Version$	= strPart("%installingProdVersion%", "1", calculate(strPos("%installingProdVersion%","-") + "-" + "1" ))
-Set $Property_DesktopLink$ = GetProductProperty("DesktopLink","True")
+Set $LogDir$               = "%SystemDrive%\tmp"
+Set $msi_name$             = "Citavi5Setup.msi"
+Set $PackageVersion$	     = takeString(1, splitString ("%installingProdVersion%","-"))
+Set $Version$	             = strPart("%installingProdVersion%", "1", calculate(strPos("%installingProdVersion%","-") + "-" + "1" ))
+Set $Property_DesktopIcon$ = GetProductProperty("desktopicon","True")
 ; ----------------------------------------------------------------
 Set $ProductId$       = "citavi"
 Set $PrettyName$      = "Citavi"
-Set $MinimumSpace$    = "570 MB"
-Set $LicenseRequired$ = "false"
-Set $LicensePool$     = "p_" + $ProductId$
-Set $DesktopLinkName$ = "Citavi 5"
+Set $MinimumSpace$    = "578 MB"
+Set $DesktopIconName$ = "Citavi 5"
 Set $InstallDir$			= "%ProgramFiles32Dir%\Citavi 5"
 Set $PathToExe$       = $InstallDir$ + "\bin\Citavi.exe"
+Set $LicenseType$     = GetProductProperty("type-of-license","testversion")
+Set $LicensePool$     = GetProductProperty("licensepool","none")
+
+if ($LicensePool$ = "none")
+  Set $LicenseRequired$ = "false"
+else 
+  Set $LicenseRequired$ = "true"
+endif
 ; ----------------------------------------------------------------
 
 if not(HasMinimumSpace ("%SystemDrive%", $MinimumSpace$))
@@ -47,29 +54,39 @@ if not(HasMinimumSpace ("%SystemDrive%", $MinimumSpace$))
 	isFatalError "No Space"
 	; Stop process and set installation status to failed
 else
-  Killtask "Citavi.exe"
-	comment "Show product picture"
+  comment "Show product picture"
 	ShowBitmap "%ScriptPath%\" + $ProductId$ + ".png" $PrettyName$ + " " + $Version$
 	
-	if FileExists("%ScriptPath%\delsub.opsiscript")
-		comment "Start uninstall sub section"
-		Sub "%ScriptPath%\delsub.opsiscript"
+  if $LicenseType$ = "site-license-file"
+	  if not(FileExists("%ScriptPath%\custom\common.dat4"))
+      LogError "No common.dat4 site license file found in custom folder of this product, though kind-of-license property set to site-license-file. Please copy your common.dat4 file to the custom folder of your opsi server or change the type-of-license property to testversion."
+      isFatalError "No common.dat4 license file found in custom folder, though kind-of-license property set to site-license-file" 
+	  endif
 	endif
-	
-	Message "Installing " + $ProductId$ + " ..."
 	
 	if $LicenseRequired$ = "true"
 		comment "Licensing required, reserve license and get license key"
 		Sub_get_licensekey
 	endif
 	
+	Killtask "Citavi.exe"
+	
+	if FileExists("%ScriptPath%\delsub.opsiscript")
+		comment "Start uninstall sub section"
+		Sub "%ScriptPath%\delsub.opsiscript"
+	endif
+	
+	Message "Installing " + $ProductId$ + " ..."	
 	comment "Start setup program"
 	ChangeDirectory "%SCRIPTPATH%"
-	
 	Winbatch_install
 	Sub_check_exitcode
 	
-	if $Property_DesktopLink$ = "True"
+	if $LicenseType$ = "site-license-file"
+	  Files_copy_license
+  endif
+
+	if $Property_DesktopIcon$ = "True"
     LinkFolder_create
   else
     LinkFolder_delete
@@ -87,3 +104,6 @@ endif
 
 [Winbatch_install]
 msiexec /i "%ScriptPath%\$msi_name$" /q INSTALLDESKTOPSHORTCUTS=1 INSTALLSTARTMENUSHORTCUTS=1 /l* "$LogDir$\$ProductId$.install_log.txt" ALLUSERS=1 REBOOT=ReallySuppress 
+
+[Files_copy_license]
+copy "%ScriptPath%\custom\common.dat4" "%ProgramFiles32Dir%\Citavi 5\bin"

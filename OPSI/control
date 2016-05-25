@@ -1,5 +1,5 @@
 [Package]
-version: 3
+version: 1
 depends: 
 incremental: False
 
@@ -7,9 +7,9 @@ incremental: False
 type: localboot
 id: dfn_citavi
 name: Citavi
-description: Literaturverwaltungsprogramm zum Recherchieren, PDF-Dokumente managen, Zitate sammeln, Wissen organisieren, Bibliographien automatisch erstellen, im Team arbeiten.
-advice: Dies installiert die Testversion, für die Lizensierung zur Vollversion bitte beim Institut/Anbieter nachfragen. This is a test version, to upgrade to a full license please ask your institution/provicer.
-version: 5.2
+description: Literaturverwaltungsprogramm zum Recherchieren, PDF-Dokumente managen, Zitate sammeln, Wissen organisieren, Bibliographien automatisch erstellen, im Team arbeiten. / Citavi is a reference management program for Microsoft Windows
+advice: Dies installiert die Testversion, fuer die Lizensierung zur Vollversion bitte beim Institut/Anbieter nachfragen. This is a test version, to upgrade to a full license please ask your institution/provicer.
+version: 5.3.1.0
 priority: 0
 licenseRequired: False
 productClasses: 
@@ -29,7 +29,7 @@ requirementType: before
 
 [ProductProperty]
 type: bool
-name: desktoplink
+name: desktopicon
 description: generate or delete DesktopLink
 default: True
 
@@ -37,7 +37,7 @@ default: True
 type: unicode
 name: custom-post-install
 multivalue: False
-editable: False
+editable: True
 description: Define filename for include script in custom directory after installation
 values: ["none", "post-install.opsiinc"]
 default: ["none"]
@@ -46,9 +46,27 @@ default: ["none"]
 type: unicode
 name: custom-post-deinstall
 multivalue: False
-editable: False
+editable: True
 description: Define filename for include script in custom directory after deinstallation
 values: ["none", "post-deinstall.opsiinc"]
+default: ["none"]
+
+[ProductProperty]
+type: unicode
+name: type-of-license
+multivalue: False
+editable: False
+description: "site-license-file" uses the common.dat4 file which has to be placed in the custom folder. "testversion" installs the test version which can be activated with the individual licence code provided on the citavi.com website to everyone with an email address from the domain of the licensed institute.
+values: ["site-license-file", "testversion"]
+default: ["testversion"]
+
+[ProductProperty]
+type: unicode
+name: licensepool
+multivalue: False
+editable: True
+description: Use the OPSI license module, but just for counting. The licensing is done with the property type-of-license.
+values: ["none"]
 default: ["none"]
 
 [Changelog]
@@ -56,5 +74,4 @@ citavi (3.3-1) testing; urgency=low
 
   * Initial package
 
- -- Eric Esser <esser@wzb.eu>  Wed, 07 Nov 2012 14:16:42 +0000
-
+ -- Eric Esser <eric.esser@wzb.eu>  Wed, 07 Nov 2012 14:16:42 +0000

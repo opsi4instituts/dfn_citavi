@@ -4,7 +4,7 @@
 set_basefolder common_desktopdirectory
 set_subfolder ""
 set_link
-       name: $DesktopLinkName$
+       name: $DesktopIconName$
        target: $PathToExe$
        parameters:
        working_dir: $InstallDir$
@@ -15,4 +15,4 @@ end_link
 [LinkFolder_delete]
 set_basefolder common_desktopdirectory
 set_subfolder ""
-delete_element $DesktopLinkName$
+delete_element $DesktopIconName$

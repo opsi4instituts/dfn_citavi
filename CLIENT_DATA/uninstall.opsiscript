@@ -17,7 +17,7 @@ DefVar $InstallDir$
 DefVar $LicenseRequired$
 DefVar $LicensePool$
 DefVar $PrettyName$
-DefVar $DesktopLinkName$
+DefVar $DesktopIconName$
 DefVar $CustomPostDeinstall$
 
 Set $LogDir$ = "%SystemDrive%\tmp"
@@ -29,7 +29,14 @@ Set $ProductId$       = "citavi"
 Set $PrettyName$      = "Citavi"
 Set $LicenseRequired$ = "true"
 Set $LicensePool$     = "p_" + $ProductId$
-Set $DesktopLinkName$ = "Citavi 5"
+Set $DesktopIconName$ = "Citavi 5"
+Set $LicensePool$     =  GetProductProperty("licensepool","none")
+
+if ($LicensePool$ = "none")
+  Set $LicenseRequired$ = "false"
+else 
+  Set $LicenseRequired$ = "true"
+endif
 ; ----------------------------------------------------------------
 
 Killtask "Citavi.exe"
@@ -48,7 +55,13 @@ if $LicenseRequired$ = "true"
 	Sub_free_license
 endif
 
-LinkFolder_delete
+comment "include custom post deinstall file"
+set $CustomPostDeinstall$ = getProductProperty("custom-post-deinstall","none")
+if not ($CustomPostDeinstall$ = "none")
+	if FileExists("%ScriptPath%\custom\" + $CustomPostDeinstall$)
+		include_insert "%ScriptPath%\custom\" + $CustomPostDeinstall$
+	endif
+endif
 
 [Sub_free_license]
 comment "License management is enabled and will be used"

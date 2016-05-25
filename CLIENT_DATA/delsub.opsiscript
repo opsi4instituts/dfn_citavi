@@ -19,13 +19,6 @@ for %aktmsi% in $msilist$ do sub_uninstallmsi
 comment "Delete program shortcuts"
 LinkFolder_delete
 
-comment "include custom post deinstall file"
-set $CustomPostDeinstall$ = getProductProperty("custom-post-deinstall","none")
-if not ($CustomPostDeinstall$ = "none")
-	if FileExists("%ScriptPath%\custom\" + $CustomPostDeinstall$)
-		include_insert "%ScriptPath%\custom\" + $CustomPostDeinstall$
-	endif
-endif
 
 ;-----------------------------------------------------
 
