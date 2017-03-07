@@ -9,7 +9,7 @@ id: dfn_citavi
 name: Citavi
 description: Literaturverwaltungsprogramm zum Recherchieren, PDF-Dokumente managen, Zitate sammeln, Wissen organisieren, Bibliographien automatisch erstellen, im Team arbeiten. / Citavi is a reference management program for Microsoft Windows
 advice: Dies installiert die Testversion, fuer die Lizensierung zur Vollversion bitte beim Institut/Anbieter nachfragen. This is a test version, to upgrade to a full license please ask your institution/provicer.
-version: 5.4.0.2
+version: 5.5.0.1
 priority: 0
 licenseRequired: False
 productClasses: 
