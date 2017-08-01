@@ -27,7 +27,7 @@ DefVar $CustomPostInstall$
 DefVar $CustomPostDeinstall$
 DefVar $LicenseType$
 
-Set $LogDir$               = "%SystemDrive%\tmp"
+Set $LogDir$							 = "%opsiLogDir%"  
 Set $msi_name$             = "Citavi5Setup.msi"
 Set $PackageVersion$	     = takeString(1, splitString ("%installingProdVersion%","-"))
 Set $Version$	             = strPart("%installingProdVersion%", "1", calculate(strPos("%installingProdVersion%","-") + "-" + "1" ))
@@ -35,7 +35,7 @@ Set $Property_DesktopIcon$ = GetProductProperty("desktopicon","True")
 ; ----------------------------------------------------------------
 Set $ProductId$       = "citavi"
 Set $PrettyName$      = "Citavi"
-Set $MinimumSpace$    = "578 MB"
+Set $MinimumSpace$    = "600 MB"
 Set $DesktopIconName$ = "Citavi 5"
 Set $InstallDir$			= "%ProgramFiles32Dir%\Citavi 5"
 Set $PathToExe$       = $InstallDir$ + "\bin\Citavi.exe"
@@ -58,18 +58,19 @@ else
 	ShowBitmap "%ScriptPath%\" + $ProductId$ + ".png" $PrettyName$ + " " + $Version$
 	
   if $LicenseType$ = "site-license-file"
-	  if not(FileExists("%ScriptPath%\custom\common.dat4"))
-      LogError "No common.dat4 site license file found in custom folder of this product, though kind-of-license property set to site-license-file. Please copy your common.dat4 file to the custom folder of your opsi server or change the type-of-license property to testversion."
-      isFatalError "No common.dat4 license file found in custom folder, though kind-of-license property set to site-license-file" 
+	  if ((not(FileExists("%ScriptPath%\custom\common.dat4"))) and (not(FileExists("%ScriptPath%\custom\common.dat5"))))
+      LogError "No common.dat4 or common.dat5 site license file found in custom folder of this product, though kind-of-license property set to site-license-file. Please copy your common.dat4 file to the custom folder of your opsi server or change the type-of-license property to testversion."
+      isFatalError "No common.dat4 or common.dat5 license file found in custom folder, though kind-of-license property set to site-license-file" 
 	  endif
 	endif
-	
+
 	if $LicenseRequired$ = "true"
 		comment "Licensing required, reserve license and get license key"
 		Sub_get_licensekey
 	endif
 	
 	Killtask "Citavi.exe"
+
 	
 	if FileExists("%ScriptPath%\delsub.opsiscript")
 		comment "Start uninstall sub section"
@@ -83,7 +84,12 @@ else
 	Sub_check_exitcode
 	
 	if $LicenseType$ = "site-license-file"
-	  Files_copy_license
+	  if (FileExists("%ScriptPath%\custom\common.dat4"))
+  	  Files_copy_dat4_license
+    endif
+    if (FileExists("%ScriptPath%\custom\common.dat5"))
+      Files_copy_dat5_license
+    endif
   endif
 
 	if $Property_DesktopIcon$ = "True"
@@ -105,5 +111,8 @@ endif
 [Winbatch_install]
 msiexec /i "%ScriptPath%\$msi_name$" /q INSTALLDESKTOPSHORTCUTS=1 INSTALLSTARTMENUSHORTCUTS=1 /l* "$LogDir$\$ProductId$.install_log.txt" ALLUSERS=1 REBOOT=ReallySuppress 
 
-[Files_copy_license]
+[Files_copy_dat4_license]
 copy "%ScriptPath%\custom\common.dat4" "%ProgramFiles32Dir%\Citavi 5\bin"
+
+[Files_copy_dat5_license]
+copy "%ScriptPath%\custom\common.dat5" "%ProgramFiles32Dir%\Citavi 5\bin"
