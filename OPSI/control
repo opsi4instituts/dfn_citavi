@@ -7,9 +7,9 @@ incremental: False
 type: localboot
 id: dfn_citavi
 name: Citavi
-description: Literaturverwaltungsprogramm zum Recherchieren, PDF-Dokumente managen, Zitate sammeln, Wissen organisieren, Bibliographien automatisch erstellen, im Team arbeiten. / Citavi is a reference management program for Microsoft Windows
-advice: Dies installiert die Testversion, fuer die Lizensierung zur Vollversion bitte beim Institut/Anbieter nachfragen. This is a test version, to upgrade to a full license please ask your institution/provicer.
-version: 5.6.0.2
+description: Literaturverwaltungsprogramm zum Recherchieren, PDF-Dokumente managen, Zitate sammeln, Wissen organisieren, Bibliographien automatisch erstellen, im Team arbeiten. // Citavi is a reference management program for Microsoft Windows
+advice: Dies installiert die Testversion, fuer die Lizensierung zur Vollversion bitte beim Institut/Anbieter nachfragen. // This is a test version, to upgrade to a full license please ask your institution/provicer.
+version: 5.7.0.0
 priority: 0
 licenseRequired: False
 productClasses: 
@@ -60,16 +60,13 @@ description: "site-license-file" uses the common.dat4 file which has to be place
 values: ["site-license-file", "testversion"]
 default: ["testversion"]
 
-[ProductProperty]
-type: unicode
-name: licensepool
-multivalue: False
-editable: True
-description: Use the OPSI license module, but just for counting. The licensing is done with the property type-of-license.
-values: ["none"]
-default: ["none"]
-
 [Changelog]
+dfn_citavi (5.7.0.0-1) stable; urgency=low
+
+Update auf 5.7.00, MSI getauscht.
+
+ -- Eric Esser <eric.esser@wzb.eu>  Wed, 27 Sep 2017 15:46:36 +0000
+
 dfn_citavi (5.6.0.2-1) stable; urgency=low
 
 Also common.dat5 files are accepted now.
