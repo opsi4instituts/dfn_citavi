@@ -25,11 +25,12 @@ Set $LogDir$ = "%SystemDrive%\tmp"
 ; ----------------------------------------------------------------
 ; - Please edit the following values                             -
 ; ----------------------------------------------------------------
-Set $ProductId$       = "citavi"
+Set $ProductId$       = "dfn_citavi"
 Set $PrettyName$      = "Citavi"
+Set $MsiId$           = "{6A331045-8FF4-4BC9-9C56-E593ACAE28C2}"
 Set $LicenseRequired$ = "true"
 Set $LicensePool$     = "p_" + $ProductId$
-Set $DesktopIconName$ = "Citavi 5"
+Set $DesktopIconName$ = "Citavi 6"
 Set $LicensePool$     =  GetProductProperty("licensepool","none")
 
 if ($LicensePool$ = "none")

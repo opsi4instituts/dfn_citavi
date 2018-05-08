@@ -26,21 +26,36 @@ DefVar $Property_DesktopIcon$
 DefVar $CustomPostInstall$
 DefVar $CustomPostDeinstall$
 DefVar $LicenseType$
+DefVar $DisableWelcomeScreen$
+DefVar $DisableAutoCheckForLiveUpdate$
+DefVar $DisableAddOnStore$
+DefVar $DisableCeip$
+DefVar $DisableCitaviAccount$
+DefVar $DeleteUserSettingsOnShutdown$
 
 Set $LogDir$							 = "%opsiLogDir%"  
-Set $msi_name$             = "Citavi5Setup.msi"
+Set $msi_name$             = "Citavi6Setup.msi"
+Set $MsiId$                = "{6A331045-8FF4-4BC9-9C56-E593ACAE28C2}"
 Set $PackageVersion$	     = takeString(1, splitString ("%installingProdVersion%","-"))
 Set $Version$	             = strPart("%installingProdVersion%", "1", calculate(strPos("%installingProdVersion%","-") + "-" + "1" ))
 Set $Property_DesktopIcon$ = GetProductProperty("desktopicon","True")
+Set $DeleteUserSettingsOnShutdown$ = GetProductProperty("delete-user-settings-on-shutdown","0")
+Set $DisableAddOnStore$ = GetProductProperty("disable-add-on-store","False")
+Set $DisableAutoCheckForLiveUpdate$ = GetProductProperty("disable-auto-check-for-live-update","False")
+Set $DisableCeip$ = GetProductProperty("disable-ceip","False")
+Set $DisableCitaviAccount$ = GetProductProperty("disable-citavi-account","False")
+Set $DisableWelcomeScreen$ = GetProductProperty("disable-welcome-screen","False")
 ; ----------------------------------------------------------------
-Set $ProductId$       = "citavi"
+Set $ProductId$       = "dfn_citavi"
 Set $PrettyName$      = "Citavi"
 Set $MinimumSpace$    = "600 MB"
-Set $DesktopIconName$ = "Citavi 5"
-Set $InstallDir$			= "%ProgramFiles32Dir%\Citavi 5"
+Set $DesktopIconName$ = "Citavi 6"
+Set $InstallDir$			= "%ProgramFiles32Dir%\Citavi 6"
 Set $PathToExe$       = $InstallDir$ + "\bin\Citavi.exe"
 Set $LicenseType$     = GetProductProperty("type-of-license","testversion")
 Set $LicensePool$     = GetProductProperty("licensepool","none")
+; ----------------------------------------------------------------
+
 
 if ($LicensePool$ = "none")
   Set $LicenseRequired$ = "false"
@@ -58,9 +73,9 @@ else
 	ShowBitmap "%ScriptPath%\" + $ProductId$ + ".png" $PrettyName$ + " " + $Version$
 	
   if $LicenseType$ = "site-license-file"
-	  if ((not(FileExists("%ScriptPath%\custom\common.dat4"))) and (not(FileExists("%ScriptPath%\custom\common.dat5"))))
-      LogError "No common.dat4 or common.dat5 site license file found in custom folder of this product, though kind-of-license property set to site-license-file. Please copy your common.dat4 file to the custom folder of your opsi server or change the type-of-license property to testversion."
-      isFatalError "No common.dat4 or common.dat5 license file found in custom folder, though kind-of-license property set to site-license-file" 
+	  if (not(FileExists("%ScriptPath%\custom\common.dat6")))
+      LogError "No common.dat6 site license file found in custom folder of this product, though kind-of-license property set to site-license-file. Please copy your common.dat4 file to the custom folder of your opsi server or change the type-of-license property to testversion."
+      isFatalError "No common.dat6 license file found in custom folder, though kind-of-license property set to site-license-file" 
 	  endif
 	endif
 
@@ -70,7 +85,6 @@ else
 	endif
 	
 	Killtask "Citavi.exe"
-
 	
 	if FileExists("%ScriptPath%\delsub.opsiscript")
 		comment "Start uninstall sub section"
@@ -83,15 +97,17 @@ else
 	Winbatch_install
 	Sub_check_exitcode
 	
+	comment "Site License File"
 	if $LicenseType$ = "site-license-file"
-	  if (FileExists("%ScriptPath%\custom\common.dat4"))
-  	  Files_copy_dat4_license
-    endif
-    if (FileExists("%ScriptPath%\custom\common.dat5"))
-      Files_copy_dat5_license
+    if (FileExists("%ScriptPath%\custom\common.dat6"))
+      Files_copy_dat6_license
     endif
   endif
 
+  comment "Citavi Admin Properties"
+	Registry_Admin_Properties /32bit
+
+	comment "Desktop Icon"
 	if $Property_DesktopIcon$ = "True"
     LinkFolder_create
   else
@@ -106,13 +122,34 @@ else
 	  endif
   endif
 
+	comment "Test for installation success"
+	;Test if software marked as installed in registry
+    if (GetRegistryStringValueSysnative("[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\" + $MsiId$ + "] DisplayName") = "")
+        if (GetRegistryStringValue32("[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\" + $MsiId$ + "] DisplayName") = "")
+            logError "Fatal: After Installation [HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\" + $MsiId$ + "] not found"
+            isFatalError "not_found_after_install"
+        else
+            comment "Successful Installation x86"
+        endif
+    endif
+
+  ; logdatein bei bedarf ("$LogDir$\$ProductId$.install_log.txt" funktioniert nicht)
+  ;includelog "c:\opsi.org\log\dfn_citavi.uninstall_log.txt" "1000" "auto"
+  ;includelog "c:\opsi.org\log\dfn_citavi.install_log.txt" "1000" "auto"
+
 endif
 
 [Winbatch_install]
-msiexec /i "%ScriptPath%\$msi_name$" /q INSTALLDESKTOPSHORTCUTS=1 INSTALLSTARTMENUSHORTCUTS=1 /l* "$LogDir$\$ProductId$.install_log.txt" ALLUSERS=1 REBOOT=ReallySuppress 
+msiexec /i "%ScriptPath%\$msi_name$" /q INSTALLDESKTOPSHORTCUTS=0 INSTALLSTARTMENUSHORTCUTS=0 /l* "$LogDir$\$ProductId$.install_log.txt" ALLUSERS=1 REBOOT=ReallySuppress 
 
-[Files_copy_dat4_license]
-copy "%ScriptPath%\custom\common.dat4" "%ProgramFiles32Dir%\Citavi 5\bin"
+[Files_copy_dat6_license]
+copy "%ScriptPath%\custom\common.dat6" "%ProgramFiles32Dir%\Citavi 6\bin"
 
-[Files_copy_dat5_license]
-copy "%ScriptPath%\custom\common.dat5" "%ProgramFiles32Dir%\Citavi 5\bin"
+[Registry_Admin_Properties]
+OpenKey [HKLM\Software\Swiss Academic Software\Citavi 6\AdminSettings]
+Set "DisableWelcomeScreen"="$DisableWelcomeScreen$"
+Set "DisableAutoCheckForLiveUpdate"="$DisableAutoCheckForLiveUpdate$"
+Set "DisableAddOnStore"="$DisableAddOnStore$"
+Set "DisableCeip"="$DisableCeip$"
+Set "DisableCitaviAccount"="$DisableCitaviAccount$"
+Set "DeleteUserSettingsOnShutdown"="$DeleteUserSettingsOnShutdown$"

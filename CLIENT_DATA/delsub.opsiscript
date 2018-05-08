@@ -9,16 +9,16 @@ DefVar $displayName32$
 DefVar $displayName64$ 
 
 Set $found$     = "false"
-Set $MsiId$     = '{7EB278FB-0C3C-445E-8665-4A6CDD9B794E}'
+Set $MsiList$ = addtolist($MsiList$, $MsiId$)
 Set $MsiList$ = addtolist($MsiList$, '{e12c6653-1ff0-4686-adb8-589c13ae761f}')
 Set $MsiList$ = addtolist($MsiList$, '{cc0a85b2-734a-45b3-b678-05f6a6499ac7}')
 Set $MsiList$ = addtolist($MsiList$, '{7EB278FB-0C3C-445E-8665-4A6CDD9B794E}')
+Set $MsiList$ = addtolist($MsiList$, '{6A331045-8FF4-4BC9-9C56-E593ACAE28C2}')
 
 for %aktmsi% in $msilist$ do sub_uninstallmsi
 
 comment "Delete program shortcuts"
 LinkFolder_delete
-
 
 ;-----------------------------------------------------
 
@@ -36,4 +36,4 @@ if not ($displayName32$ = "") or not ($displayName64$ = "")
 endif
 
 [Winbatch_uninstall_msi]
-msiexec /x $MsiId$ /qb! /log "C:\tmp\citavi_uninstall_log.txt" REBOOT=ReallySuppress
+msiexec /x $MsiId$ /qb! /log "$LogDir$\$ProductId$.uninstall_log.txt" REBOOT=ReallySuppress

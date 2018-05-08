@@ -1,7 +1,6 @@
 [Package]
-version: 1
+version: 2
 depends: 
-incremental: False
 
 [Product]
 type: localboot
@@ -9,7 +8,7 @@ id: dfn_citavi
 name: Citavi
 description: Literaturverwaltungsprogramm zum Recherchieren, PDF-Dokumente managen, Zitate sammeln, Wissen organisieren, Bibliographien automatisch erstellen, im Team arbeiten. // Citavi is a reference management program for Microsoft Windows
 advice: Dies installiert die Testversion, fuer die Lizensierung zur Vollversion bitte beim Institut/Anbieter nachfragen. // This is a test version, to upgrade to a full license please ask your institution/provicer.
-version: 5.7.0.0
+version: 6.1.0.0
 priority: 0
 licenseRequired: False
 productClasses: 
@@ -56,11 +55,62 @@ type: unicode
 name: type-of-license
 multivalue: False
 editable: False
-description: "site-license-file" uses the common.dat4 file which has to be placed in the custom folder. "testversion" installs the test version which can be activated with the individual licence code provided on the citavi.com website to everyone with an email address from the domain of the licensed institute.
+description: 'site-license-file' uses the common.dat6 file which has to be placed in the custom folder. "testversion" installs the test version which can be activated with the individual licence code provided on the citavi.com website to everyone with an email address from the domain of the licensed institute.
 values: ["site-license-file", "testversion"]
-default: ["testversion"]
+default: []
+
+[ProductProperty]
+type: unicode
+name: delete-user-settings-on-shutdown
+multivalue: False
+editable: True
+description: Setting the value to 1 ("Always") means that the user settings are always deleted when Citavi is closed (even if the user remains logged in). The user will also be logged out every time Citavi is closed if this option is selected; Setting the value to 2 ("Never") means that user settings are never deleted when Citavi is closed (even if the user logs out); Setting the value to 0 ("Default") or no value means that the user settings will be deleted when users log out of their accounts.
+values: ["0", "1", "2"]
+default: ["0"]
+
+[ProductProperty]
+type: bool
+name: disable-add-on-store
+description: Setting the value to 'true' means that the Add-On Manager (Tools > Manage add-ons) and the online macros for the Citation Style Editor will be made invisible or blocked. The manual installation of add-ons by registry key will not be affected.
+default: False
+
+[ProductProperty]
+type: bool
+name: disable-auto-check-for-live-update
+description: Setting the value to 'true' means that Citavi is not allowed to check for automatic updates.
+default: True
+
+[ProductProperty]
+type: bool
+name: disable-ceip
+description: Setting the value to 'true' means that no user data will  be send to Citavi
+default: True
+
+[ProductProperty]
+type: bool
+name: disable-citavi-account
+description: Setting the value to "true" means that login into Citavi account is not possible
+default: True
+
+[ProductProperty]
+type: bool
+name: disable-welcome-screen
+description: The first time they start Citavi 6, users will not see the Welcome Screen which helps them convert their projects from previous versions.
+default: False
 
 [Changelog]
+dfn_citavi (6.1.0.0-2) stable; urgency=low
+
+Umstellung auf Citavi 6, dafuer zuaetzliche properties eingefuegt.
+
+ -- Robert Stroetgen <r.stroetgen@tu-braunschweig.de>  Tue, 08 May 2018 12:16:50 +0000
+
+dfn_citavi (5.7.1.0-1) stable; urgency=low
+
+Update auf 5.7.1.0, MSI getauscht.
+
+ -- Robert Stroetgen <r.stroetgen@tu-braunschweig.de>  Thu, 15 Feb 2018 12:01:32 +0000
+
 dfn_citavi (5.7.0.0-1) stable; urgency=low
 
 Update auf 5.7.00, MSI getauscht.
