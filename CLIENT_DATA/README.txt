@@ -12,14 +12,14 @@ PROPERTIES
 * desktopicon: Generate or delete desktop icon.
 * custom-post-install: Define filename for include script in custom directory after installation.
 * custom-post-deinstall: Define filename for include script in custom directory after deinstallation.
-* type-of-license: Defines the type of license: "testversion" installs citavi as test version, "site-license-file" uses the Common.dat4 or Common.dat5 file placed in the custom folder of the package.
+* type-of-license: Defines the type of license: "testversion" installs citavi as test version, "site-license-file" uses the Common.dat4 or Common.dat5 or Common.dat6 file placed in the custom folder of the package.
 * Citavi Admin Properties:
   * delete-user-settings-on-shutdown: Setting the value to 1 ("Always") means that the user settings are always deleted when Citavi is closed (even if the user remains logged in). The user will also be logged out every time Citavi is closed if this option is selected; Setting the value to 2 ("Never") means that user settings are never deleted when Citavi is closed (even if the user logs out); Setting the value to 0 ("Default") or no value means that the user settings will be deleted when users log out of their accounts.
-  * DisableAddOnStore: Setting the value to 'true' means that the Add-On Manager (Tools > Manage add-ons) and the online macros for the Citation Style Editor will be made invisible or blocked. The manual installation of add-ons by registry key will not be affected.
-  * DisableAutoCheckForLiveUpdate: Setting the value to "true" means that Citavi is not allowed to check for automatic updates.
-  * DisableCeip: Setting the value to 'true' means that no user data will  be send to Citavi
-  * DisableCitaviAccount: Setting the value to "true" means that login into Citavi account is not possible
-  * DisableWelcomeScreen: The first time they start Citavi 6, users will not see the Welcome Screen which helps them convert their projects from previous versions.
+  * disable-add-on-store: Setting the value to 'true' means that the Add-On Manager (Tools > Manage add-ons) and the online macros for the Citation Style Editor will be made invisible or blocked. The manual installation of add-ons by registry key will not be affected.
+  * disable-auto-check-for-live-update: Setting the value to "true" means that Citavi is not allowed to check for automatic updates.
+  * disable-ceip: Setting the value to 'true' means that no user data will  be send to Citavi
+  * disable-citavi-account: Setting the value to "true" means that login into Citavi account is not possible
+  * disable-welcome-screen: The first time they start Citavi 6, users will not see the Welcome Screen which helps them convert their projects from previous versions.
 
 Citavi Admin Properties:
 https://www1.citavi.com/sub/manual6/en/adminsettings.html

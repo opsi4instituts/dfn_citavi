@@ -7,7 +7,6 @@
 requiredWinstVersion >= "4.11.4.17"
 
 include_insert "insert_check_exit_code.opsiinc"
-include_insert "insert_get_licensekey.opsiinc"
 include_append "section_linkfolder.opsiinc"
 
 DefVar $MsiId$
@@ -53,15 +52,6 @@ Set $DesktopIconName$ = "Citavi 6"
 Set $InstallDir$			= "%ProgramFiles32Dir%\Citavi 6"
 Set $PathToExe$       = $InstallDir$ + "\bin\Citavi.exe"
 Set $LicenseType$     = GetProductProperty("type-of-license","testversion")
-Set $LicensePool$     = GetProductProperty("licensepool","none")
-; ----------------------------------------------------------------
-
-
-if ($LicensePool$ = "none")
-  Set $LicenseRequired$ = "false"
-else 
-  Set $LicenseRequired$ = "true"
-endif
 ; ----------------------------------------------------------------
 
 if not(HasMinimumSpace ("%SystemDrive%", $MinimumSpace$))
@@ -79,11 +69,6 @@ else
 	  endif
 	endif
 
-	if $LicenseRequired$ = "true"
-		comment "Licensing required, reserve license and get license key"
-		Sub_get_licensekey
-	endif
-	
 	Killtask "Citavi.exe"
 	
 	if FileExists("%ScriptPath%\delsub.opsiscript")

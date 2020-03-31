@@ -14,8 +14,6 @@ DefVar $UninstallProgram$
 DefVar $LogDir$
 DefVar $ProductId$
 DefVar $InstallDir$
-DefVar $LicenseRequired$
-DefVar $LicensePool$
 DefVar $PrettyName$
 DefVar $DesktopIconName$
 DefVar $CustomPostDeinstall$
@@ -28,16 +26,7 @@ Set $LogDir$ = "%SystemDrive%\tmp"
 Set $ProductId$       = "dfn_citavi"
 Set $PrettyName$      = "Citavi"
 Set $MsiId$           = "{6A331045-8FF4-4BC9-9C56-E593ACAE28C2}"
-Set $LicenseRequired$ = "true"
-Set $LicensePool$     = "p_" + $ProductId$
 Set $DesktopIconName$ = "Citavi 6"
-Set $LicensePool$     =  GetProductProperty("licensepool","none")
-
-if ($LicensePool$ = "none")
-  Set $LicenseRequired$ = "false"
-else 
-  Set $LicenseRequired$ = "true"
-endif
 ; ----------------------------------------------------------------
 
 Killtask "Citavi.exe"
@@ -51,11 +40,6 @@ if FileExists("%ScriptPath%\delsub.opsiscript")
 	Sub "%ScriptPath%\delsub.opsiscript"
 endif
 
-if $LicenseRequired$ = "true"
-	comment "Licensing required, free license used"
-	Sub_free_license
-endif
-
 comment "include custom post deinstall file"
 set $CustomPostDeinstall$ = getProductProperty("custom-post-deinstall","none")
 if not ($CustomPostDeinstall$ = "none")
@@ -63,16 +47,3 @@ if not ($CustomPostDeinstall$ = "none")
 		include_insert "%ScriptPath%\custom\" + $CustomPostDeinstall$
 	endif
 endif
-
-[Sub_free_license]
-comment "License management is enabled and will be used"
-comment "Trying to free license used for the product"
-DefVar $result$
-Set $result$ = FreeLicense($LicensePool$)
-; If there is an assignment of a license pool to the product, it is possible to use
-; Set $result$ = FreeLicense("", $ProductId$)
-;
-; If there is an assignment of a license pool to a windows software id, it is possible to use
-; DefVar $WindowsSoftwareId$
-; $WindowsSoftwareId$ = "..."
-; set $result$ = FreeLicense("", "", $WindowsSoftwareId$)
