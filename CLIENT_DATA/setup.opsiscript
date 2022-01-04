@@ -30,6 +30,7 @@ DefVar $DisableAutoCheckForLiveUpdate$
 DefVar $DisableAddOnStore$
 DefVar $DisableCeip$
 DefVar $DisableCitaviAccount$
+DefVar $DisableWordAddin$
 DefVar $DeleteUserSettingsOnShutdown$
 
 Set $LogDir$							 = "%opsiLogDir%"  
@@ -44,6 +45,7 @@ Set $DisableAutoCheckForLiveUpdate$ = GetProductProperty("disable-auto-check-for
 Set $DisableCeip$ = GetProductProperty("disable-ceip","False")
 Set $DisableCitaviAccount$ = GetProductProperty("disable-citavi-account","False")
 Set $DisableWelcomeScreen$ = GetProductProperty("disable-welcome-screen","False")
+Set $DisableWordAddin$ = GetProductProperty("disable-word-addin","False")
 ; ----------------------------------------------------------------
 Set $ProductId$       = "dfn_citavi"
 Set $PrettyName$      = "Citavi"
@@ -91,6 +93,14 @@ else
 
   comment "Citavi Admin Properties"
 	Registry_Admin_Properties /32bit
+	
+	comment "Word Addin"
+	if $DisableWordAddin$ = "True"
+		comment "Disable Word Addin"
+    Registry_Disable_Word_Addin
+	;else
+	;	Registry_Enable_Word_Addin
+  endif	
 
 	comment "Desktop Icon"
 	if $Property_DesktopIcon$ = "True"
@@ -138,3 +148,13 @@ Set "DisableAddOnStore"="$DisableAddOnStore$"
 Set "DisableCeip"="$DisableCeip$"
 Set "DisableCitaviAccount"="$DisableCitaviAccount$"
 Set "DeleteUserSettingsOnShutdown"="$DeleteUserSettingsOnShutdown$"
+
+[Registry_Disable_Word_Addin]
+OpenKey [HKLM\Software\Microsoft\Office\Word\Addins\SwissAcademic.Citavi.WordAddIn.Connect]
+Set "LoadBehavior"=reg_dword:00000000
+Set "Warmup"=reg_dword:00000000
+
+[Registry_Enable_Word_Addin]
+OpenKey [HKLM\Software\Microsoft\Office\Word\Addins\SwissAcademic.Citavi.WordAddIn.Connect]
+DeleteVar "LoadBehavior"
+DeleteVar "Warmup"

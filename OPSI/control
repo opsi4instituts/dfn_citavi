@@ -8,7 +8,7 @@ id: dfn_citavi
 name: Citavi
 description: Literaturverwaltungsprogramm zum Recherchieren, PDF-Dokumente managen, Zitate sammeln, Wissen organisieren, Bibliographien automatisch erstellen, im Team arbeiten. // Citavi is a reference management program for Microsoft Windows
 advice: Dies installiert die Testversion, fuer die Lizensierung zur Vollversion bitte beim Institut/Anbieter nachfragen. // This is a test version, to upgrade to a full license please ask your institution/provicer.
-version: 6.4.0.0
+version: 6.10.0.0
 priority: 0
 licenseRequired: False
 productClasses: 
@@ -27,19 +27,13 @@ requiredStatus: installed
 requirementType: before
 
 [ProductProperty]
-type: bool
-name: desktopicon
-description: generate or delete DesktopLink
-default: True
-
-[ProductProperty]
 type: unicode
-name: custom-post-install
+name: type-of-license
 multivalue: False
-editable: True
-description: Define filename for include script in custom directory after installation
-values: ["none", "post-install.opsiinc"]
-default: ["none"]
+editable: False
+description: 'site-license-file' uses the common.dat6 file which has to be placed in the custom folder. "testversion" installs the test version which can be activated with the individual licence code provided on the citavi.com website to everyone with an email address from the domain of the licensed institute.
+values: ["site-license-file", "testversion"]
+default: []
 
 [ProductProperty]
 type: unicode
@@ -52,27 +46,24 @@ default: ["none"]
 
 [ProductProperty]
 type: unicode
-name: type-of-license
-multivalue: False
-editable: False
-description: 'site-license-file' uses the common.dat6 file which has to be placed in the custom folder. "testversion" installs the test version which can be activated with the individual licence code provided on the citavi.com website to everyone with an email address from the domain of the licensed institute.
-values: ["site-license-file", "testversion"]
-default: []
-
-[ProductProperty]
-type: unicode
-name: delete-user-settings-on-shutdown
+name: custom-post-install
 multivalue: False
 editable: True
-description: Setting the value to 1 ("Always") means that the user settings are always deleted when Citavi is closed (even if the user remains logged in). The user will also be logged out every time Citavi is closed if this option is selected; Setting the value to 2 ("Never") means that user settings are never deleted when Citavi is closed (even if the user logs out); Setting the value to 0 ("Default") or no value means that the user settings will be deleted when users log out of their accounts.
-values: ["0", "1", "2"]
-default: ["0"]
+description: Define filename for include script in custom directory after installation
+values: ["none", "post-install.opsiinc"]
+default: ["none"]
 
 [ProductProperty]
 type: bool
-name: disable-add-on-store
-description: Setting the value to 'true' means that the Add-On Manager (Tools > Manage add-ons) and the online macros for the Citation Style Editor will be made invisible or blocked. The manual installation of add-ons by registry key will not be affected.
+name: disable-word-addin
+description: Setting the value to "true" means that Citavi AddIn is disabled in Microsoft Word
 default: False
+
+[ProductProperty]
+type: bool
+name: disable-citavi-account
+description: Setting the value to "true" means that login into Citavi account is not possible
+default: True
 
 [ProductProperty]
 type: bool
@@ -88,9 +79,18 @@ default: True
 
 [ProductProperty]
 type: bool
-name: disable-citavi-account
-description: Setting the value to "true" means that login into Citavi account is not possible
-default: True
+name: disable-add-on-store
+description: Setting the value to 'true' means that the Add-On Manager (Tools > Manage add-ons) and the online macros for the Citation Style Editor will be made invisible or blocked. The manual installation of add-ons by registry key will not be affected.
+default: False
+
+[ProductProperty]
+type: unicode
+name: delete-user-settings-on-shutdown
+multivalue: False
+editable: True
+description: Setting the value to 1 ("Always") means that the user settings are always deleted when Citavi is closed (even if the user remains logged in). The user will also be logged out every time Citavi is closed if this option is selected; Setting the value to 2 ("Never") means that user settings are never deleted when Citavi is closed (even if the user logs out); Setting the value to 0 ("Default") or no value means that the user settings will be deleted when users log out of their accounts.
+values: ["0", "1", "2"]
+default: ["0"]
 
 [ProductProperty]
 type: bool
@@ -98,7 +98,37 @@ name: disable-welcome-screen
 description: The first time they start Citavi 6, users will not see the Welcome Screen which helps them convert their projects from previous versions.
 default: False
 
+[ProductProperty]
+type: bool
+name: desktopicon
+description: generate or delete DesktopLink
+default: True
+
 [Changelog]
+dfn_citavi (6.10.0.0-2) stable; urgency=low
+
+Property zum Deaktivieren des Word Addins ergänzt
+
+ -- Robert Stroetgen <r.stroetgen@tu-braunschweig.de>  Mon, 03 Jan 2022 15:46:23 +0000
+
+dfn_citavi (6.10.0.0-1) stable; urgency=low
+
+Update 6.10.0.0
+
+ -- Robert Stroetgen <r.stroetgen@tu-braunschweig.de>  Mon, 12 Jul 2021 11:24:34 +0000
+
+dfn_citavi (6.8.0.0-1) stable; urgency=low
+
+Update 6.8.0.0
+
+ -- Robert Strötgen <r.stroetgen@tu-braunschweig.de>  Mon, 18 Jan 2021 15:26:17 +0000
+
+dfn_citavi (6.7.0.0-1) stable; urgency=low
+
+Update 6.7.0.0
+
+ -- Robert Stroetgen <r.stroetgen@tu-braunschweig.de>  Mon, 02 Nov 2020 08:33:38 +0000
+
 dfn_citavi (6.4.0.0-2) stable; urgency=low
 
 Removed old license pool stuff
