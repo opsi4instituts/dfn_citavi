@@ -97,9 +97,12 @@ else
 	comment "Word Addin"
 	if $DisableWordAddin$ = "True"
 		comment "Disable Word Addin"
-    Registry_Disable_Word_Addin
+    Registry_Disable_Word_Addin /32bit
+		Registry_Disable_Word_Addin /64bit
 	;else
-	;	Registry_Enable_Word_Addin
+	; comment "Enable Word Addin"
+		Registry_Enable_Word_Addin /32bit
+		Registry_Enable_Word_Addin /64bit
   endif	
 
 	comment "Desktop Icon"
@@ -156,5 +159,5 @@ Set "Warmup"=reg_dword:00000000
 
 [Registry_Enable_Word_Addin]
 OpenKey [HKLM\Software\Microsoft\Office\Word\Addins\SwissAcademic.Citavi.WordAddIn.Connect]
-DeleteVar "LoadBehavior"
-DeleteVar "Warmup"
+Set "LoadBehavior"=reg_dword:00000003
+Set "Warmup"=reg_dword:00000001
