@@ -32,6 +32,7 @@ DefVar $DisableCeip$
 DefVar $DisableCitaviAccount$
 DefVar $DisableWordAddin$
 DefVar $DeleteUserSettingsOnShutdown$
+DefVar $SilentOption$
 
 Set $LogDir$							 = "%opsiLogDir%"  
 Set $msi_name$             = "Citavi6Setup.msi"
@@ -46,6 +47,7 @@ Set $DisableCeip$ = GetProductProperty("disable-ceip","False")
 Set $DisableCitaviAccount$ = GetProductProperty("disable-citavi-account","False")
 Set $DisableWelcomeScreen$ = GetProductProperty("disable-welcome-screen","False")
 Set $DisableWordAddin$ = GetProductProperty("disable-word-addin","False")
+Set $SilentOption$ = GetProductProperty("silent_option","/qb!")
 ; ----------------------------------------------------------------
 Set $ProductId$       = "dfn_citavi"
 Set $PrettyName$      = "Citavi"
@@ -101,8 +103,8 @@ else
 		Registry_Disable_Word_Addin /64bit
 	;else
 	; comment "Enable Word Addin"
-		Registry_Enable_Word_Addin /32bit
-		Registry_Enable_Word_Addin /64bit
+	;	Registry_Enable_Word_Addin /32bit
+	;	Registry_Enable_Word_Addin /64bit
   endif	
 
 	comment "Desktop Icon"
@@ -138,7 +140,7 @@ else
 endif
 
 [Winbatch_install]
-msiexec /i "%ScriptPath%\$msi_name$" /q INSTALLDESKTOPSHORTCUTS=0 INSTALLSTARTMENUSHORTCUTS=0 /l* "$LogDir$\$ProductId$.install_log.txt" ALLUSERS=1 REBOOT=ReallySuppress 
+msiexec /i "%ScriptPath%\$msi_name$" $SilentOption$ INSTALLDESKTOPSHORTCUTS=0 INSTALLSTARTMENUSHORTCUTS=0 /l* "$LogDir$\$ProductId$.install_log.txt" ALLUSERS=1 REBOOT=ReallySuppress 
 
 [Files_copy_dat6_license]
 copy "%ScriptPath%\custom\common.dat6" "%ProgramFiles32Dir%\Citavi 6\bin"

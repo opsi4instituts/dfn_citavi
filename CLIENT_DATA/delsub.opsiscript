@@ -7,6 +7,7 @@ DefVar $found$
 DefStringList $MsiList$
 DefVar $displayName32$ 
 DefVar $displayName64$ 
+Set $SilentOption$ = GetProductProperty("silent_option","/qb!")
 
 Set $found$     = "false"
 Set $MsiList$ = addtolist($MsiList$, $MsiId$)
@@ -19,6 +20,10 @@ for %aktmsi% in $msilist$ do sub_uninstallmsi
 
 comment "Delete program shortcuts"
 LinkFolder_delete
+
+comment "Remove registry keys"
+Registry_uninstall /32bit
+Registry_uninstall /64bit
 
 ;-----------------------------------------------------
 
@@ -36,4 +41,7 @@ if not ($displayName32$ = "") or not ($displayName64$ = "")
 endif
 
 [Winbatch_uninstall_msi]
-msiexec /x $MsiId$ /qb! /log "$LogDir$\$ProductId$.uninstall_log.txt" REBOOT=ReallySuppress
+msiexec /x $MsiId$ $SilentOption$ /log "$LogDir$\$ProductId$.uninstall_log.txt" REBOOT=ReallySuppress
+
+[Registry_uninstall]
+DeleteKey [HKLM\Software\Microsoft\Office\Word\Addins\SwissAcademic.Citavi.WordAddIn.Connect]

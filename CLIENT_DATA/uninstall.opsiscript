@@ -17,6 +17,7 @@ DefVar $InstallDir$
 DefVar $PrettyName$
 DefVar $DesktopIconName$
 DefVar $CustomPostDeinstall$
+DefVar $SilentOption$
 
 Set $LogDir$ = "%SystemDrive%\tmp"
 

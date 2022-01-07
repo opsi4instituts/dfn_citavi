@@ -1,5 +1,5 @@
 [Package]
-version: 2
+version: 4
 depends: 
 
 [Product]
@@ -104,7 +104,28 @@ name: desktopicon
 description: generate or delete DesktopLink
 default: True
 
+[ProductProperty]
+type: unicode
+name: silent_option
+multivalue: False
+editable: False
+description: Un/Install silent (/qb!) or very silent (/qn); Show progressbar of installer or not
+values: ["/qb!", "/qn"]
+default: ["/qb!"]
+
 [Changelog]
+dfn_citavi (6.10.0.0-4) stable; urgency=low
+
+SilentOption hinzugefügt. Dank an Waldemar Münz <muenz@luis.uni-hannover.de>
+
+ -- Robert Strötgen <r.stroetgen@tu-braunschweig.de>  Fri, 07 Jan 2022 14:11:35 +0000
+
+dfn_citavi (6.10.0.0-3) stable; urgency=low
+
+Kleine Anpassungen an Deaktivieren des Word Addins
+
+ -- Robert Strötgen <r.stroetgen@tu-braunschweig.de>  Fri, 07 Jan 2022 11:55:28 +0000
+
 dfn_citavi (6.10.0.0-2) stable; urgency=low
 
 Property zum Deaktivieren des Word Addins ergänzt
